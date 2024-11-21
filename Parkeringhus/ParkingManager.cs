@@ -16,7 +16,7 @@ public class ParkingManager
         {
             Car => 1,        // En plats för bil
             Bus => 2,        // Två platser för buss
-            Motorcycle => 1, // En halv plats för MC, men här tilldelar vi en hel plats för enkelhet
+            Motorcycle => 0.5, // En halv plats för MC, men här tilldelar vi en hel plats för enkelhet
             _ => 0
         };
 
