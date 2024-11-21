@@ -23,7 +23,7 @@
         if (spot != null && spot.IsOccupied && spot.OccupiedTime.HasValue)
         {
             TimeSpan parkedDuration = DateTime.Now - spot.OccupiedTime.Value;
-            if (parkedDuration.TotalMinutes > 120)  // Böter om parkeringsduration är längre än 2 timmar
+            if (parkedDuration.TotalMinutes > 5)  // Böter om parkeringsduration är längre än 2 timmar
             {
                 Console.WriteLine($"Böter utfärdas på parkeringsplats {spotNumber}: {spot.OccupyingVehicle.LicensePlate} har varit parkerad i {parkedDuration.TotalMinutes} minuter.");
             }
