@@ -1,0 +1,114 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+
+namespace ParkeringshusTester
+{
+    public class ParkingGarage
+    {
+        private readonly Dictionary<int, string> _parkeringsplatser = new();
+
+        public bool TilldelaPlats(int platsnummer, string fordonId)
+        {
+            if (_parkeringsplatser.ContainsKey(platsnummer))
+            {
+                return false;
+            }
+
+            _parkeringsplatser[platsnummer] = fordonId;
+            return true;
+        }
+
+        public bool ÄrPlatsLedig(int platsnummer)
+        {
+            return !_parkeringsplatser.ContainsKey(platsnummer);
+        }
+
+        public string HämtaFordonPåPlats(int platsnummer)
+        {
+            return _parkeringsplatser.ContainsKey(platsnummer) ? _parkeringsplatser[platsnummer] : null;
+        }
+    }
+
+    [TestClass]
+    public class ParkeringshusTester
+    {
+        [TestMethod]
+        public void TilldelaPlats_SkaReturneraSant_NärPlatsÄrLedig()
+        {
+            var garage = new ParkingGarage();
+            int platsnummer = 1;
+            string fordonId = "ABC123";
+            bool resultat = garage.TilldelaPlats(platsnummer, fordonId);
+            Assert.IsTrue(resultat, "Platsen borde tilldelas korrekt.");
+        }
+
+        [TestMethod]
+        public void TilldelaPlats_SkaReturneraFalskt_NärPlatsÄrUpptagen()
+        {
+
+            var garage = new ParkingGarage();
+            int platsnummer = 1;
+            string fordonId1 = "ABC123";
+            string fordonId2 = "DEF456";
+            garage.TilldelaPlats(platsnummer, fordonId1);
+            bool resultat = garage.TilldelaPlats(platsnummer, fordonId2);
+            Assert.IsFalse(resultat, "Platsen ska inte kunna tilldelas igen om den är upptagen.");
+        }
+
+        [TestMethod]
+        public void ÄrPlatsLedig_SkaReturneraSant_NärPlatsÄrFri()
+        {
+
+            var garage = new ParkingGarage();
+            int platsnummer = 2;
+            bool ärLedig = garage.ÄrPlatsLedig(platsnummer);
+            Assert.IsTrue(ärLedig, "Platsen borde vara ledig.");
+        }
+
+        [TestMethod]
+        public void ÄrPlatsLedig_SkaReturneraFalskt_NärPlatsÄrUpptagen()
+        {
+
+            var garage = new ParkingGarage();
+            int platsnummer = 1;
+            string fordonId = "ABC123";
+
+            garage.TilldelaPlats(platsnummer, fordonId);
+
+
+            bool ärLedig = garage.ÄrPlatsLedig(platsnummer);
+
+
+            Assert.IsFalse(ärLedig, "Platsen borde inte vara ledig.");
+        }
+
+        [TestMethod]
+        public void HämtaFordonPåPlats_SkaReturneraFordonId_NärPlatsÄrUpptagen()
+        {
+
+            var garage = new ParkingGarage();
+            int platsnummer = 1;
+            string fordonId = "ABC123";
+
+            garage.TilldelaPlats(platsnummer, fordonId);
+
+
+            string resultat = garage.HämtaFordonPåPlats(platsnummer);
+
+
+            Assert.AreEqual(fordonId, resultat, "Korrekt fordon-ID borde returneras.");
+        }
+
+        [TestMethod]
+        public void HämtaFordonPåPlats_SkaReturneraNull_NärPlatsÄrTom()
+        {
+
+            var garage = new ParkingGarage();
+            int platsnummer = 1;
+
+            string resultat = garage.HämtaFordonPåPlats(platsnummer);
+
+            Assert.IsNull(resultat, "Inget fordon-ID borde returneras för en tom plats.");
+        }
+    }
+}
